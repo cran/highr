@@ -1,6 +1,6 @@
 
 ## ------------------------------------------------------------------------
-p = parse(text = '   xx = 1 + 1  # a comment', keep.source = TRUE)
+p = parse(text = "   xx = 1 + 1  # a comment", keep.source = TRUE)
 (d = getParseData(p))
 
 
@@ -41,7 +41,7 @@ paste(s, m[, 1], d$text, m[, 2], sep = '', collapse = '')
 
 
 ## ------------------------------------------------------------------------
-d = getParseData(parse(text = 'x = "a character\nstring" #hi', keep.source = TRUE))
+d = getParseData(parse(text = "x = \"a character\nstring\" #hi", keep.source = TRUE))
 (d = d[d$terminal, ])
 
 

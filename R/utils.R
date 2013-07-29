@@ -23,14 +23,14 @@ group_src = function(code) {
 }
 
 # whether a code expression can be parsed
-try_parse = function(code) {
-  !inherits(try(parse(text = code, keep.source = FALSE), silent = TRUE), 'try-error')
+try_parse = function(code, silent = TRUE) {
+  !inherits(try(parse(text = code, keep.source = FALSE), silent = silent), 'try-error')
 }
 
 # borrowed from knitr
 
 # escape backslashes and {} for the alltt package
-escape_latex = function(x, newlines = FALSE, spaces = FALSE) {
+escape_latex = function(x) {
   x = gsub('\\\\', '\\\\textbackslash', x)
   x = gsub('([{}])', '\\\\\\1', x)
   gsub('\\\\textbackslash', '\\\\textbackslash{}', x)

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0014)about:internet -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -196,7 +195,7 @@ img{display:block;margin:auto;}
 introduced in R 3.0.0. This function gives detailed information of the
 symbols in a code fragment. A simple example:</p>
 
-<pre><code class="r">p = parse(text = &#39;   xx = 1 + 1  # a comment&#39;, keep.source = TRUE)
+<pre><code class="r">p = parse(text = &quot;   xx = 1 + 1  # a comment&quot;, keep.source = TRUE)
 (d = getParseData(p))
 </code></pre>
 
@@ -394,7 +393,7 @@ paste(s, m[, 1], d$text, m[, 2], sep = &quot;&quot;, collapse = &quot;&quot;)
 <p>So far so simple. That is one line of code, after all. A next challenge
 comes when there are multiple lines, and a token spans across multiple lines:</p>
 
-<pre><code class="r">d = getParseData(parse(text = &#39;x = &quot;a character\nstring&quot; #hi&#39;, keep.source = TRUE))
+<pre><code class="r">d = getParseData(parse(text = &quot;x = \&quot;a character\nstring\&quot; #hi&quot;, keep.source = TRUE))
 (d = d[d$terminal, ])
 </code></pre>
 

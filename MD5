@@ -1,9 +1,9 @@
-42eba39c4dc79ac8d1ace76416d92663 *DESCRIPTION
+7f17eae431d9ecd2fa0a55b966c30966 *DESCRIPTION
 e3811a3f299b2b2add4bfacd6d027d1b *NAMESPACE
-887cccac48a9bf02566fd1195948d122 *NEWS
+065c6cc566fd553ca4e605739cbb3fef *NEWS
 6dbe5890f54438e4a7d56bff5a0564bf *R/fallback.R
-74f5d7f2e861bd81171c16f56c81e08e *R/highlight.R
-9b0433aa684e9734375977db9e136109 *R/utils.R
+bb7876a0240d17e069a1019fd5b8dc1c *R/highlight.R
+7fe1bf8288c5ef2973874d9f4ed4c11d *R/utils.R
 05d4f5c207711651cf3075752a980da7 *inst/doc/highr-custom.R
 1e0258ad776b2e0e4216fef0b8564209 *inst/doc/highr-custom.Rmd
 69f3df357a983136f644d3537095e14d *inst/doc/highr-custom.html
@@ -12,7 +12,8 @@ aa085c756297fe4e2c8a1cb48a17cf50 *inst/doc/highr-internals.R
 1483f76ce97b85f7a087768f0b326ee2 *inst/doc/highr-internals.html
 0c176b826dbcfe8c5d89552be3dfce9e *man/hi_andre.Rd
 334a81cc97b6777f9660b45ba66a18ba *man/hilight.Rd
-632f45dfbdf8402b0c542ce6e1995816 *tests/test-all.R
+d21b60c7a641d749f31f3a2ab9441af0 *tests/test-R2/test-highlight.R
+6b1470c40f77b5b5d2caddc6f6dc9869 *tests/test-all.R
 f99abafdecaeaf634efb194554acc1d1 *tests/testit/test-hilight.R
 6febfe9ff05c510dfeb854a0e67e11ea *tests/testit/test-utils.R
 1e0258ad776b2e0e4216fef0b8564209 *vignettes/highr-custom.Rmd

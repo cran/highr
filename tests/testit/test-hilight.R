@@ -20,6 +20,14 @@ assert(
 )
 
 assert(
+  'hi_latex() preserves blank lines',
+  identical(hi_latex(c('1+1','','foo(x=3) # comm')), c(
+    '\\hlnum{1}\\hlopt{+}\\hlnum{1}\n',
+    '\\hlkwd{foo}\\hlstd{(}\\hlkwc{x}\\hlstd{=}\\hlnum{3}\\hlstd{)} \\hlcom{# comm}'
+  ))
+)
+
+assert(
   'the fallback method recognizes comments, functions and strings',
   identical(hi_latex('1+1 # a comment', fallback = TRUE), '1+1 \\hlcom{# a comment}'),
   identical(hi_latex('paste("STRING", \'string\')', fallback = TRUE),
@@ -30,6 +38,11 @@ assert(
   'the fallback mode is used when the code does not parse',
   has_warning(res <- hi_latex('1+1+ # comment')),
   identical(res, '1+1+ \\hlcom{# comment}')
+)
+
+assert(
+  'hilight() works even if code only contains comments',
+  identical(hi_latex('# only comments'), '\\hlcom{# only comments}')
 )
 
 # define one's own markup data frame

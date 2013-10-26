@@ -47,7 +47,8 @@ merge_cmd = function(pdata, cmd) {
 }
 
 # getParseData() came from R 3.0; for R < 3.0, use the fallback method
-R3 = getRversion() >= '3.0.0'
+Rversion = getRversion()
+R3 = Rversion >= '3.0.0'
 
 #' Syntax highlight an R code fragment
 #'
@@ -104,6 +105,7 @@ R3 = getRversion() >= '3.0.0'
 #' highr:::cmd_latex; highr:::cmd_html
 #' @export
 hilight = function(code, format = c('latex', 'html'), markup, prompt = FALSE, fallback) {
+  if (length(code) == 0) return(code)
   format = match.arg(format)
   if (missing(markup))
     markup = if (format == 'latex') cmd_latex else cmd_html
@@ -135,7 +137,9 @@ hilight_one = function(code, format, markup, escape_fun) {
   op = options(stringsAsFactors = FALSE, keep.source = TRUE); on.exit(options(op))
 
   p = parse(text = code)
-  if (length(p) == 0L) return(code)
+  # R <= 3.0.1 has a bug when code is all comments; below is for compatibility
+  if (Rversion <= '3.0.1' && length(p) == 0L)
+    return(hi_naive(code, format, markup, escape_fun))
   z = utils::getParseData(p)
   if (NROW(z) == 0L || !any(z$terminal)) return(code)
   z = z[z$terminal, ]
@@ -144,6 +148,11 @@ hilight_one = function(code, format, markup, escape_fun) {
 
   # escape special LaTeX/HTML chars
   res$text = escape_fun(res$text)
+
+  # record how many blank lines after each token
+  blanks = c(pmax(res$line1[-1] - res$line2[-nrow(res)] - 1, 0), 0)
+  # add line breaks to the 8th column
+  res = cbind(res, mapply(spaces, blanks, '\n'))
 
   # e.g. a string spans across multiple lines; now need to replace line1 with
   # line2 so that we know the starting and ending positions of spaces; e.g. turn
@@ -163,7 +172,7 @@ hilight_one = function(code, format, markup, escape_fun) {
     # add 0 and remove col[n, 2] to get start/end positions of spaces
     col = matrix(head(c(0, t(col)), -1), ncol = 2, byrow = TRUE)
     paste(mapply(spaces, col[, 2] - col[, 1] - 1), d[, 6], d[, 'text'], d[, 7],
-          sep = '', collapse = '')
+          d[, 8], sep = '', collapse = '')
   }), use.names = FALSE)
 }
 #' @export
@@ -186,10 +195,17 @@ hi_html = function(code, ...) hilight(code, 'html', ...)
 #' @examples \dontrun{hi_andre('1+1', language='R')
 #' hi_andre('void main() {\nreturn(0)\n}', language='c', format='latex')}
 hi_andre = function(code, language, format = 'html') {
-  if (!nzchar(Sys.which('highlight')))
+  h = Sys.which('highlight')
+  # highlight on Linux Mint can be something else
+  if (!nzchar(h) || (h == '/usr/local/bin/highlight' && !file.exists(h <- '/usr/bin/highlight')))
     stop('please first install highlight from http://www.andre-simon.de')
   f = basename(tempfile('code', '.'))
   writeLines(code, f); on.exit(unlink(f))
-  cmd = sprintf('highlight -f -S %s -O %s %s', language, format, f)
+  cmd = sprintf('%s -f -S %s -O %s %s', shQuote(h), correct_lang(language), format, f)
   system(cmd, intern = TRUE)
+}
+
+# to help knitr engines decide the highlight language
+correct_lang = function(x) {
+  switch(x, Rcpp = 'cpp', tikz = 'latex', Rscript = 'R', x)
 }

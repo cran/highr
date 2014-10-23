@@ -3,7 +3,8 @@
 
 .operators = c(
   sprintf("'%s'", c('+', '-', '*', '/', '^', '$', '@', ':', '?', '~', '!')),
-  'SPECIAL', 'GT', 'GE', 'LT', 'LE', 'EQ', 'NE', 'AND', 'AND2', 'OR', 'OR2'
+  'SPECIAL', 'GT', 'GE', 'LT', 'LE', 'EQ', 'NE', 'AND', 'AND2', 'OR', 'OR2',
+  'NS_GET', 'NS_GET_INT'
 )
 
 .cmd.list = sort(c(
@@ -79,7 +80,7 @@ R3 = Rversion >= '3.0.0'
 #'   expression based method when the R version is smaller than 3.0.0 and
 #'   \code{getParseData()} is unavailable; this method is not precise and only
 #'   highlights a few types of symbols such as comments, strings and functions;
-#'   by default, \code{fallback = getRversion < '3.0.0'}, and \code{fallback =
+#'   by default, \code{fallback = getRversion() < '3.0.0'}, and \code{fallback =
 #'   TRUE} when the input \code{code} fails to be \code{\link{parse}d}
 #' @param ... arguments to be passed to \code{hilight()}
 #' @author Yihui Xie <\url{http://yihui.name}> and Yixuan Qiu
@@ -107,7 +108,7 @@ R3 = Rversion >= '3.0.0'
 hilight = function(code, format = c('latex', 'html'), markup, prompt = FALSE, fallback) {
   if (length(code) == 0) return(code)
   format = match.arg(format)
-  if (missing(markup))
+  if (missing(markup) || is.null(markup))
     markup = if (format == 'latex') cmd_latex else cmd_html
   escape_fun = if (format == 'latex') escape_latex else escape_html
   if (missing(fallback)) fallback = !R3
@@ -196,8 +197,11 @@ hi_html = function(code, ...) hilight(code, 'html', ...)
 #' hi_andre('void main() {\nreturn(0)\n}', language='c', format='latex')}
 hi_andre = function(code, language, format = 'html') {
   h = Sys.which('highlight')
+  os = Sys.info()[['sysname']]
   # highlight on Linux Mint can be something else
-  if (!nzchar(h) || (h == '/usr/local/bin/highlight' && !file.exists(h <- '/usr/bin/highlight')))
+  # on OS10 with highlight installed using Homebrew it's often in /usr/local/bin
+  if (!nzchar(h) || (h == '/usr/local/bin/highlight' && os != 'Darwin' && 
+                       !file.exists(h <- '/usr/bin/highlight')))
     stop('please first install highlight from http://www.andre-simon.de')
   f = basename(tempfile('code', '.'))
   writeLines(code, f); on.exit(unlink(f))

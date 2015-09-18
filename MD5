@@ -1,11 +1,11 @@
-0c974dd64a178c6adb7200c21d5309a7 *DESCRIPTION
-e3811a3f299b2b2add4bfacd6d027d1b *NAMESPACE
+a46b8731c82d114ac8de3f8e1aa4e0c6 *DESCRIPTION
+68274cca900e43411344b6790cc88137 *NAMESPACE
 8da1b7d88b65a9e747ab205d82bdd562 *NEWS
 edd4691064bc2829e778a19f3f7aea36 *R/fallback.R
-053b610de8ddf3e7f3c0e082f48256f5 *R/highlight.R
-b75a8a4e6c481e0d0d15335de801a0da *R/utils.R
+c02b47afc0250b83ee1fb6a30c3cd3de *R/highlight.R
+6e1a919f62f41a739fb5b44b78ba56ae *R/utils.R
 6db7f4556e35df982db7222498f97d5d *README.md
-65946694b0c86794455fea028056774f *build/vignette.rds
+2f4642430f9ac03c28e1934e0b9ec325 *build/vignette.rds
 be7537135afa7009923a53cdd13981e2 *inst/doc/highr-custom.R
 8747f3ac8d45c3e813454387aea7631d *inst/doc/highr-custom.Rmd
 940a1a0b01b23a3acd849503db5213cb *inst/doc/highr-custom.html

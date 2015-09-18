@@ -95,6 +95,7 @@ merge_cmd = function(pdata, cmd) {
 #'
 #' # the markup data frames
 #' highr:::cmd_latex; highr:::cmd_html
+#' @import utils
 #' @export
 hilight = function(code, format = c('latex', 'html'), markup, prompt = FALSE, fallback = FALSE) {
   if (length(code) == 0) return(code)
@@ -126,7 +127,7 @@ hilight_one = function(code, format, markup, escape_fun) {
   # the data frames do not need factors in this function; need to keep source
   op = options(stringsAsFactors = FALSE, keep.source = TRUE); on.exit(options(op))
 
-  p = parse(text = code)
+  p = parse_source(code)
   z = utils::getParseData(p)
   if (NROW(z) == 0L || !any(z$terminal)) return(code)
   z = z[z$terminal, ]

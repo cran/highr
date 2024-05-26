@@ -10,7 +10,7 @@
 .cmd.list = sort(c(
   NUM_CONST            = 'num', # numbers
   SYMBOL_FUNCTION_CALL = 'kwd', # function calls
-  STR_CONST            = 'str', # character strings
+  STR_CONST            = 'sng', # character strings
   COMMENT              = 'com', # comment
   SYMBOL_FORMALS       = 'kwc', # function(formals)
   SYMBOL_SUB           = 'kwc', # FUN(args)
@@ -20,7 +20,7 @@
   RIGHT_ASSIGN         = 'kwb',
   setNames(rep('opt', length(.operators)), .operators),
   setNames(rep('kwa', length(.keywords)), .keywords),
-  STANDARD             = 'std' # everything else
+  DEFAULT              = 'def' # everything else
 ))
 
 cmd_latex = data.frame(
@@ -38,9 +38,9 @@ cmd_latex = data.frame(
 )
 
 .cmd.pandoc = c(
-  num = 'DecValTok', kwd = 'KeywordTok', str = 'StringTok', com = 'CommentTok',
+  num = 'DecValTok', kwd = 'KeywordTok', sng = 'StringTok', com = 'CommentTok',
   kwc = 'DataTypeTok', kwb = 'NormalTok', opt = 'NormalTok', kwa = 'NormalTok',
-  std = 'NormalTok'
+  def = 'NormalTok'
 )
 
 cmd_pandoc_latex = data.frame(
@@ -61,9 +61,9 @@ cmd_html = data.frame(
 merge_cmd = function(pdata, cmd) {
   res = cmd[pdata$token, ]
   idx = is.na(res[, 1])
-  res[idx, 1] = cmd['STANDARD', 1]
-  res[idx, 2] = cmd['STANDARD', 2]
-  res[is.na(res)] = '' # if STANDARD is undefined in the markup data frame
+  res[idx, 1] = cmd['DEFAULT', 1]
+  res[idx, 2] = cmd['DEFAULT', 2]
+  res[is.na(res)] = '' # if DEFAULT is undefined in the markup data frame
   res
 }
 
@@ -78,7 +78,7 @@ merge_cmd = function(pdata, cmd) {
 #'
 #' For the \code{markup} data frame, the first column is put before the R
 #' tokens, and the second column is behind; the row names of the data frame must
-#' be the R token names; a special row is named \code{STANDARD}, which contains
+#' be the R token names; a special row is named \code{DEFAULT}, which contains
 #' the markup for the standard tokens (i.e. those that do not need to be
 #' highlighted); if missing, the built-in data frames \code{highr:::cmd_latex}
 #' and \code{highr:::cmd_html} will be used.
@@ -131,7 +131,7 @@ hilight = function(code, format = c('latex', 'html'), markup, prompt = FALSE, fa
     (if (fallback) hi_naive else hilight_one)(code, format, markup, escape_fun)
   )
   p1 = escape_fun(getOption('prompt')); p2 = escape_fun(getOption('continue'))
-  std = unlist(markup['STANDARD', ])
+  std = unlist(markup['DEFAULT', ])
   if (!any(is.na(std))) {
     p1 = paste0(std[1], p1, std[2]); p2 = paste0(std[1], p2, std[2])
   }
@@ -203,7 +203,8 @@ hi_html = function(code, ...) hilight(code, 'html', ...)
 #' @param language the input language (c, cpp, python, r, ...); see
 #'   \code{system('highlight -p')}
 #' @param format the output format (html, latex, ...)
-#' @references Andre Simon's Highlight package \url{http://www.andre-simon.de}.
+#' @references Andre Simon's Highlight package
+#'   \url{https://gitlab.com/saalen/highlight}.
 #' @return A character string for the syntax highlighted code.
 #' @export
 #' @examples \dontrun{hi_andre('1+1', language='R')
@@ -215,7 +216,7 @@ hi_andre = function(code, language, format = 'html') {
   # on OS10 with highlight installed using Homebrew it's often in /usr/local/bin
   if (!nzchar(h) || (h == '/usr/local/bin/highlight' && os != 'Darwin' &&
                        !file.exists(h <- '/usr/bin/highlight')))
-    stop('please first install highlight from http://www.andre-simon.de')
+    stop('please first install highlight from https://gitlab.com/saalen/highlight')
   f = basename(tempfile('code', '.'))
   writeLines(code, f); on.exit(unlink(f))
   cmd = sprintf('%s -f -S %s -O %s %s', shQuote(h), correct_lang(language), format, f)
